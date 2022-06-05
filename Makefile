@@ -11,6 +11,12 @@ define clean
 	rm -rf ./recordings/*
 endef
 
+define depends
+	sudo apt install libportaudio2 libportaudiocpp0 portaudio19-dev
+	pip3 install PyAudio
+	pip3 install pydub
+endef
+
 ############## MAKE COMMANDS ##############
 
 PHONY: clean
@@ -20,3 +26,7 @@ clean:
 PHONY: run
 run: 
 	$(call run)
+
+PHONY: depends
+depends:
+	$(call depends)

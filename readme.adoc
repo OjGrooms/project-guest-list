@@ -2,8 +2,8 @@
 
 This project is built to run on raspberryPi on rasberryPi 3B+. It is designed to interface with  
 a disemboweled rotory phone, where the handset is terminated into retrofit mono 3.5mm audio jack  
-and connected to a headphone/mic usb adapter, the receiver switch is interfaced with a GPIO 3.3v pin  
-and a I/O pin to detect when the handset is lifted, and the rotor dial is not connected to anything.
+and connected to a headphone/mic usb adapter, a SPDT switch is interfaced with a GPIO 3.3v pin,  
+a I/O pin to detect when the handset is lifted, and a ground. 
 
 This project can be expaned on to utilize the rotor for other purposes, but this specific application  
 is as follows:
@@ -21,3 +21,37 @@ so the program will not continue until it's finished.
 Recording is non-blocking, meaning that the program will continue while recording is taking place.  
 This is important because at any point, the handset can be set back on the reciever, or the timer  
 can fire and reset the state.
+
+### Raspberry Pi Configuration and required dependencies:
+''''
+
+The SPDT (single pole, dual throw) switch is powered through the common pole, the NC (normally closed)  
+pole is wired to pin 18, and NO (normally open) is wired to pin 20 (GRND). This eliminates potential  
+bad readings when the timer ends and sets the phone back into the 'lowered' state.  
+*NOTES*: 
+- You will have to manually set your default audio i/o in Rasbian desktop. If you do not, you will  
+not get any audio playback out of the jack, and the microphone may not record. 
+- PyAudio dumps a bunch of messages in the console when its methods are used. Most are for adapters  
+and cards not found on a rasberryPi. To disable: `nano /usr/share/alsa/alsa.conf`, find the seciton  
+'redirect to load-on-demand extended pcm definitions' and place a `#` infront of every line below  
+`pcm.sysdefault cards.pcm.default` and above the next section. There will still be some messages,  
+but this will remove the wall of errors.
+- 1kOhm resistors were used on the NC and NO legs of the switch, this may not be necessary as  
+the GPIO pins have internal resistors.
+''''
+
+Required dependencies can be automatically installed with `make depends` command.  
+PyAudio is required for recording. It requires libportaudio2, libportaudiocpp0, and portaudio19-dev.
+pydub is required for audio playback.
+''''
+
+### Make commands:
+''''
+
+`make depends`: sudo installs the dependencies for PyAudio, pip3 installs PyAudio and pydub
+''''
+
+`make clean`: removes __pycache__ and any audio recordings in the /recordings dir
+''''
+
+'make run': runs `guestListApp.py`, press `enter` or terminate to close
