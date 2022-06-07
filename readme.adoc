@@ -28,14 +28,19 @@ can fire and reset the state.
 The SPDT (single pole, dual throw) switch is powered through the common pole, the NC (normally closed)  
 pole is wired to pin 18, and NO (normally open) is wired to pin 20 (GRND). This eliminates potential  
 bad readings when the timer ends and sets the phone back into the 'lowered' state.  
+
+
 *NOTES*: 
+
 - You will have to manually set your default audio i/o in Rasbian desktop. If you do not, you will  
 not get any audio playback out of the jack, and the microphone may not record. 
+
 - PyAudio dumps a bunch of messages in the console when its methods are used. Most are for adapters  
 and cards not found on a rasberryPi. To disable: `nano /usr/share/alsa/alsa.conf`, find the seciton  
 'redirect to load-on-demand extended pcm definitions' and place a `#` infront of every line below  
 `pcm.sysdefault cards.pcm.default` and above the next section. There will still be some messages,  
 but this will remove the wall of errors.
+
 - 1kOhm resistors were used on the NC and NO legs of the switch, this may not be necessary as  
 the GPIO pins have internal resistors.
 ''''
@@ -43,15 +48,12 @@ the GPIO pins have internal resistors.
 Required dependencies can be automatically installed with `make depends` command.  
 PyAudio is required for recording. It requires libportaudio2, libportaudiocpp0, and portaudio19-dev.
 pydub is required for audio playback.
-''''
 
 ### Make commands:
 ''''
 
-`make depends`: sudo installs the dependencies for PyAudio, pip3 installs PyAudio and pydub
-''''
+- `make depends`: sudo installs the dependencies for PyAudio, pip3 installs PyAudio and pydub
 
-`make clean`: removes __pycache__ and any audio recordings in the /recordings dir
-''''
+- `make clean`: removes __pycache__ and any audio recordings in the /recordings dir
 
-'make run': runs `guestListApp.py`, press `enter` or terminate to close
+- `make run`: runs `guestListApp.py`, press `enter` or terminate to close
